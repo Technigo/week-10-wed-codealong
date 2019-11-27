@@ -1,9 +1,14 @@
 import React, { useState } from 'react'
+import { Summary } from './Summary'
+import { Happiness } from './Happiness'
+import { Input } from './Input'
 
 export const App = () => {
   const [happiness, setHappiness] = useState('happy')
   const [feeling, setFeeling] = useState('')
+  const [today, setToday] = useState('')
   const [showResult, setShowResult] = useState(false)
+  const [question, setQuestion] = useState('happiness')
 
   // foo[0] = state item
   // foo[1] = function to change the state item
@@ -13,54 +18,53 @@ export const App = () => {
     setShowResult(true)
   }
 
+  const handleContinueClick = () => {
+    if (question === 'happiness') {
+      setQuestion('feeling')
+    } else if (question === 'feeling') {
+      setQuestion('today')
+    }
+  }
+
   return (
     <div>
       {showResult && (
-        <div>
-          <h1>Here's your result!</h1>
-
-          <p>You are {happiness === 'happy' ? 'Super happy!' : 'Sad :('}</p>
-          <p>{feeling}</p>
-        </div>
+        <Summary feeling={feeling} happiness={happiness} />
       )}
 
       {!showResult && (
         <form onSubmit={handleSubmit}>
-          <div className="feelings">
-            <label>
-              <input
-                type="radio"
-                value="happy"
-                onChange={() => setHappiness('happy')}
-                checked={happiness === 'happy'} />
+          {question === 'happiness' && (
+            <Happiness
+              happiness={happiness}
+              setHappiness={setHappiness} />
+          )}
 
-              <span role="img" aria-label="Happy face">
-                😄
-              </span>
-            </label>
+          {question === 'feeling' && (
+            <Input
+              label="How are you feeling?"
+              value={feeling}
+              setValue={setFeeling} />
+          )}
 
-            <label>
-              <input
-                type="radio"
-                value="sad"
-                onChange={() => setHappiness('sad')}
-                checked={happiness === 'sad'} />
-              <span role="img" aria-label="Sad face">
-                😞
-              </span>
-            </label>
-          </div>
+          {question === 'today' && (
+            <div>
+              <Input
+                label="What are you going to do today?"
+                value={today}
+                setValue={setToday} />
 
-          <div className="thought">
-            <label>
-              How are you feeling?
-              <input type="text" value={feeling} onChange={(event) => setFeeling(event.target.value)} />
-            </label>
-          </div>
+              <button type="submit">
+                Send my feelings
+              </button>
+            </div>
+          )}
 
-          <button type="submit">
-            Send my feelings
-          </button>
+          {question !== 'today' && (
+            <button type="button" onClick={handleContinueClick}>
+              Continue
+            </button>
+          )}
         </form>
       )}
     </div>
