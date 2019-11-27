@@ -22,6 +22,19 @@ input {
   padding: 5px;
 }
 
+input[type="radio"] {
+  display: none;
+}
+
+input[type="radio"] + span {
+  opacity: 0.3;
+  cursor: pointer;
+}
+
+input[type="radio"]:checked + span {
+  opacity: 1;
+}
+
 form {
   padding: 20px;
 }
